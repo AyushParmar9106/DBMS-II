@@ -101,3 +101,49 @@ BEGIN
 END
 
 exec PR_EMPLOYEES_HIREDATE '2010-06-15'
+
+--PART-B
+--6
+CREATE OR ALTER PROCEDURE PR_EMPLOYEE_GENDER
+@Gender CHAR(1)
+AS
+BEGIN
+	SELECT * from Employee WHERE substring(Gender,1,1) = @Gender
+END
+
+--7
+CREATE OR ALTER PROCEDURE PR_EMPLOYEE_FNAME_DNAME
+@FName varchar(100)=null,
+@DName varchar(100)=null
+AS
+BEGIN
+	SELECT * FROM EMPLOYEE WHERE FirstName=@FName or DepartmentID=(SELECT DepartmentID from Departments where DepartmentName=@DName)
+END
+
+--8
+CREATE OR ALTER PROCEDURE PR_DEPARTMENTS_LOCATION
+@Location varchar(100)
+AS
+BEGIN
+	SELECT * FROM DEPARTMENTS WHERE Location Like '%'+@Location+'%'
+END
+
+--PART-C
+--9
+CREATE OR ALTER PROCEDURE PR_PROJECT_FROM_TO_DATE
+@FromDate Datetime,
+@ToDate Datetime
+AS
+BEGIN
+	select * FROM Projects WHERE StartDate=@FromDate AND EndDate=@ToDate
+END
+
+--10
+CREATE OR ALTER PROCEDURE PR_PROJECT_DEPARTMENT
+@PName varchar(100),
+@Location varchar(100)
+AS
+BEGIN
+	SELECT d.DepartmentName,e.FirstName,e.LastName,p.ProjectName,p.StartDate,p.EndDate FROM Projects as p join Departments as d on p.DepartmentID=d.DepartmentID join Employee as e on e.EmployeeID=d.ManagerID
+	where p.ProjectName=@PName and d.Location=@Location
+END
